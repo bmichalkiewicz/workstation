@@ -63,11 +63,11 @@ Ansible playbooks for provisioning WSL Workstations with tools which are commonl
 
 6. Install PowerLevel10K font on Windows - <https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf>
 
-7. Copy Windows Terminal config from - <>
+7. Copy Windows Terminal config from - <https://github.com/bmichalkiewicz/workstation/blob/main/configs/windowsterminal.json>
 
    - and paste it here - `C:\Users\${WINDOWS_USER_NAME}\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState`
 
-8. Copy VScode config file from - <>
+8. Copy VScode config file from - <https://github.com/bmichalkiewicz/workstation/blob/main/configs/vscode.json>
 
    - and paste it here - `C:/Users/${WINDOWS_USER_NAME}/AppData/Roaming/Code/User/settings.json`
 
