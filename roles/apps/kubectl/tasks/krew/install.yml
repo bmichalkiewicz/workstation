@@ -1,0 +1,52 @@
+---
+- name: Directory for krew   # noqa risky-file-permissions
+  ansible.builtin.file:
+    path: /tmp/krew
+    state: directory
+
+- name: Download krew binary   # noqa risky-file-permissions
+  ansible.builtin.get_url:
+    url: "https://github.com/kubernetes-sigs/krew/releases/download/v{{ krew_version }}/krew-linux_amd64.tar.gz"
+    dest: /tmp/krew/krew.tar.gz
+
+- name: Download krew config   # noqa risky-file-permissions
+  ansible.builtin.get_url:
+    url: "https://github.com/kubernetes-sigs/krew/releases/download/v{{ krew_version }}/krew.yaml"
+    dest: /tmp/krew/krew.yaml
+
+- name: Unarchive a file that is already on the remote machine
+  ansible.builtin.unarchive:
+    src: /tmp/krew/krew.tar.gz
+    dest: /tmp/krew
+    remote_src: true
+
+- name: Change permissions krew
+  ansible.builtin.file:
+    path: /tmp/krew
+    state: directory
+    recurse: true
+    owner: "{{ username }}"
+
+- name: Create directories for krew   # noqa risky-file-permissions
+  ansible.builtin.file:
+    path: "~{{ username }}/{{ item }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+  loop:
+    - ".kube"
+    - ".krew"
+
+- name: Install krew  # noqa no-changed-when
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.shell: |
+    set -o pipefail && ./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64" install krew
+  args:
+    chdir: /tmp/krew
+    executable: /usr/bin/bash
+
+- name: Delete krew directory
+  ansible.builtin.file:
+    state: absent
+    path: /tmp/krew

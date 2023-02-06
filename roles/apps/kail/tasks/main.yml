@@ -1,0 +1,20 @@
+---
+- name: Get installed version
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.shell: kail version | awk '{print $1}'
+  register: installed_kail_version
+  changed_when: false
+  ignore_errors: true
+
+- name: "Installed version of kail:"
+  ansible.builtin.debug:
+    var: installed_kail_version.stdout
+
+- name: Tasks
+  ansible.builtin.include_tasks: get_latest_version.yml
+  when: kail_version is not defined
+
+- name: Tasks
+  ansible.builtin.include_tasks: install.yml
+  when: installed_kail_version.stdout != kail_version

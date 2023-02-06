@@ -1,0 +1,20 @@
+---
+- name: Get installed version of dive
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.shell: dive version | awk '{print $2}'
+  register: installed_dive_version
+  changed_when: false
+  ignore_errors: true
+
+- name: "Installed version of dive:"
+  ansible.builtin.debug:
+    var: installed_dive_version.stdout
+
+- name: Tasks
+  ansible.builtin.include_tasks: get_latest_version.yml
+  when: dive_version is not defined
+
+- name: Tasks
+  ansible.builtin.include_tasks: install.yml
+  when: installed_dive_version.stdout != dive_version

@@ -1,0 +1,48 @@
+---
+- name: Install dependencies
+  ansible.builtin.package:
+    name: "{{ pkgs }}"
+    state: present
+  vars:
+    pkgs:
+      - unzip
+      - tar
+
+- name: Get installed version
+  ansible.builtin.shell: packer version | head -n 1 | grep v | cut -d'v' -f2
+  register: installed_packer_version
+  changed_when: false
+  ignore_errors: true
+
+- name: "Installed version of packer:"
+  ansible.builtin.debug:
+    var: installed_packer_version.stdout
+
+- name: Tasks
+  ansible.builtin.include_tasks: get_latest_version.yml
+  when: packer_version is not defined
+
+- name: Download packer  # noqa risky-file-permissions
+  ansible.builtin.get_url:
+    url: "https://releases.hashicorp.com/packer/{{ packer_version }}/packer_{{ packer_version }}_linux_amd64.zip"
+    dest: /tmp/packer.zip
+  when: installed_packer_version.stdout != packer_version
+
+- name: Unarchive a file that is already on the remote machine
+  ansible.builtin.unarchive:
+    src: /tmp/packer.zip
+    dest: /usr/local/bin/
+    remote_src: true
+  when: installed_packer_version.stdout != packer_version
+
+- name: Set permissions packer
+  ansible.builtin.file:
+    path: /usr/local/bin/packer
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Delete packer archive
+  ansible.builtin.file:
+    state: absent
+    path: /tmp/packer.zip

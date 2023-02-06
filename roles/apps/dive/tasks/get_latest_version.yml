@@ -1,0 +1,15 @@
+---
+- name: Get latest version dive
+  ansible.builtin.shell: set -o pipefail && curl -Is https://github.com/wagoodman/dive/releases/latest | grep -i 'location:' | cut -f3 -d'v' | cut -f1 -d'"'
+  register: version
+  changed_when: false
+  args:
+    executable: /usr/bin/bash
+
+- name: "Latest version of dive:"
+  ansible.builtin.debug:
+    var: version.stdout
+
+- name: "Set fact with latest version of dive"
+  ansible.builtin.set_fact:
+    dive_version: "{{ version.stdout }}"

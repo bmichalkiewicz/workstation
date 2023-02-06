@@ -1,0 +1,16 @@
+---
+- name: Get latest version argo
+  ansible.builtin.shell: |
+    set -o pipefail && curl -Is https://github.com/argoproj/argo-workflows/releases/latest | grep -i 'location:' | cut -f2 -d'v' | cut -d'"' -f1
+  register: version
+  changed_when: false
+  args:
+    executable: /usr/bin/bash
+
+- name: "Latest version of argo workflows:"
+  ansible.builtin.debug:
+    var: version.stdout
+
+- name: "Set fact with latest version of argo"
+  ansible.builtin.set_fact:
+    argo_version: "{{ version.stdout }}"

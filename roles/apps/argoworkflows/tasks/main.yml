@@ -1,0 +1,20 @@
+---
+- name: Get installed version of argo workflow
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.shell: argo version --short | awk '{print $2}' | cut -d'v' -f2
+  register: installed_argo_version
+  changed_when: false
+  ignore_errors: true
+
+- name: "Installed version of argo:"
+  ansible.builtin.debug:
+    var: installed_argo_version.stdout
+
+- name: Tasks
+  ansible.builtin.include_tasks: get_latest_version.yml
+  when: argo_version is not defined
+
+- name: Tasks
+  ansible.builtin.include_tasks: install.yml
+  when: installed_argo_version.stdout != argo_version

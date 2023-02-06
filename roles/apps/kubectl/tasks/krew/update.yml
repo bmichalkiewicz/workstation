@@ -1,0 +1,8 @@
+---
+- name: Update krew  # noqa ignore-errors
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.shell: |
+    ~/.krew/bin/kubectl-krew upgrade
+  changed_when: false
+  ignore_errors: true

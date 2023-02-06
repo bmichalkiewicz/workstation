@@ -1,0 +1,30 @@
+---
+- name: Directory for helm  # noqa risky-file-permissions
+  ansible.builtin.file:
+    path: /tmp/helm
+    state: directory
+
+- name: Download helm archive  # noqa risky-file-permissions
+  ansible.builtin.get_url:
+    url: "https://get.helm.sh/helm-v{{ helm_version }}-linux-amd64.tar.gz"
+    dest: /tmp/helm/helm.tar.gz
+
+- name: Unarchive a file that is already on the remote machine
+  ansible.builtin.unarchive:
+    src: /tmp/helm/helm.tar.gz
+    dest: /tmp/helm
+    remote_src: true
+
+- name: Copy helm
+  ansible.builtin.copy:
+    src: "/tmp/helm/linux-amd64/helm"
+    dest: "/usr/local/bin/helm"
+    remote_src: true
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Delete content & directory
+  ansible.builtin.file:
+    state: absent
+    path: /tmp/helm

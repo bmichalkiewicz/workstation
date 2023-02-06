@@ -1,0 +1,14 @@
+---
+- name: Install PIP aws-cli in virtualenv
+  ansible.builtin.pip:
+    name: "https://github.com/aws/aws-cli/archive/refs/tags/{{ aws_cli_version }}.tar.gz"
+    state: present
+    virtualenv: "{{ virtualenv_install_path }}/aws-cli"
+
+- name: Create a symbolic link for aws-cli
+  ansible.builtin.file:
+    src: "{{ virtualenv_install_path }}/aws-cli/bin/aws"
+    dest: "/usr/local/bin/aws"
+    owner: root
+    group: root
+    state: link

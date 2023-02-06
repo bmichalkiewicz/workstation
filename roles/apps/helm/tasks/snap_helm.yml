@@ -1,0 +1,16 @@
+---
+- name: Create directory structure  # noqa ignore-errors
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.command: helm list
+  ignore_errors: true
+  args:
+    creates: "~{{ username }}/snap/helm/common/kube"
+
+- name: Helm config
+  ansible.builtin.file:
+    src: "~{{ username }}/.kube/config"
+    dest: "~{{ username }}/snap/helm/common/kube/config"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: link
