@@ -32,6 +32,7 @@
   "window.customMenuBarAltFocus": false,
   "window.menuBarVisibility": "classic",
   "git.confirmSync": false,
+  "files.eol": "\n",
   "[go]": {
       "editor.insertSpaces": true,
       "editor.formatOnSave": true, 
