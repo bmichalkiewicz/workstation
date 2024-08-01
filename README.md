@@ -33,11 +33,11 @@ Ansible playbooks for provisioning WSL Workstations with tools which are commonl
    ```bash
    sudo -i
    apt-get install -y git pipx curl sudo
+   # back to your user and run below command
    pipx install --include-deps ansible
    ```
 
-4. Clone repository
-
+4. Clone repository (on your USER)
    ```bash
    # Create directory for github repository
    mkdir -p ~/git/github
@@ -50,6 +50,7 @@ Ansible playbooks for provisioning WSL Workstations with tools which are commonl
 5. Change `username` in `inventory/group_vars/all.yml` to your WSL username and run Ansible
 
    ```bash
+   cd workstation
    # Edit playbooks/group_vars/all.yml, change username
    vim inventory/group_vars/all.yml
 
