@@ -85,8 +85,8 @@
                 },
                 "hidden": false,
                 "name": "WSL",
+                "icon": "https://github.com/TheFern2/windows-terminal-icons/blob/main/icons/linux.png?raw=true",
                 "opacity": 100,
-                "source": "Windows.Terminal.Wsl",
                 "tabTitle": "WSL"
             }
         ]
