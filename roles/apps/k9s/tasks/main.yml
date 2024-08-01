@@ -1,0 +1,18 @@
+---
+- name: Get installed version
+  ansible.builtin.shell: k9s version | grep -i version | awk '{print $2}' | cut -d'v' -f 2
+  register: installed_k9s_version
+  changed_when: false
+  ignore_errors: true
+
+- name: Installed version of k9s
+  ansible.builtin.debug:
+    var: installed_k9s_version.stdout
+
+- name: Get latest version of k9s
+  ansible.builtin.include_tasks: get_latest_version.yml
+  when: k9s_version is not defined
+
+- name: Install k9s
+  ansible.builtin.include_tasks: install.yml
+  when: installed_k9s_version.stdout != k9s_version

@@ -16,13 +16,14 @@
     remote_src: true
 
 - name: Copy stern
+  become: true
   ansible.builtin.copy:
     src: "/tmp/stern/stern"
-    dest: "/usr/local/bin/stern"
-    remote_src: true
-    mode: 0755
+    dest: "{{ applications_install_path }}/stern"
     owner: root
     group: root
+    mode: "0755"
+    remote_src: true
 
 - name: Delete content & directory
   ansible.builtin.file:

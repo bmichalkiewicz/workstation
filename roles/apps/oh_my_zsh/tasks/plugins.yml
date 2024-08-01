@@ -6,7 +6,7 @@
     repo: 'https://github.com/zsh-users/zsh-autosuggestions'
     dest: "~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
     update: true
-  with_items:
+  loop:
     - "{{ username }}"
     - root
 
@@ -17,45 +17,36 @@
     repo: 'https://github.com/zsh-users/zsh-syntax-highlighting'
     dest: "~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
     update: true
-  with_items:
+  loop:
     - "{{ username }}"
     - root
 
-- name: "Powerlevel10K theme"  # noqa latest[git]
+- name: "Dracula theme"  # noqa latest[git]
   become: true
   become_user: "{{ item }}"
   ansible.builtin.git:
-    repo: 'https://github.com/romkatv/powerlevel10k'
-    dest: "~/.oh-my-zsh/custom/themes/powerlevel10k"
+    repo: 'https://github.com/dracula/zsh.git'
+    dest: "~/.oh-my-zsh/custom/themes/dracula"
     update: true
-  with_items:
-    - "{{ username }}"
-    - root
-
-- name: "P10k config"
-  ansible.builtin.copy:
-    src: templates/p10k.zsh.j2
-    dest: "~{{ item }}/.p10k.zsh"
-    owner: "{{ item }}"
-    backup: true
-    mode: 0644
-  with_items:
+  loop:
     - "{{ username }}"
     - root
 
 - name: "Oh-my-zsh config"
+  become: true
   ansible.builtin.template:
     src: oh_my_zsh_zshrc.j2
     dest: "~{{ item }}/.zshrc"
     owner: "{{ item }}"
     backup: true
-    mode: 0644
-  with_items:
+    mode: "0644"
+  loop:
     - "{{ username }}"
     - root
 
 # Fixing apt-get fzf package
 - name: Download fzf key-bindings  # noqa risky-file-permissions
+  become: true
   ansible.builtin.get_url:
     url: "https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh"
     dest: /usr/share/doc/fzf/examples/key-bindings.zsh

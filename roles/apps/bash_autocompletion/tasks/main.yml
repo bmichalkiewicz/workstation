@@ -1,0 +1,4 @@
+---
+- name: kubectx and kubens complection
+  ansible.builtin.import_tasks: "kubectx.yml"
+  when: '"apps/kubectx" in ansible_role_names'

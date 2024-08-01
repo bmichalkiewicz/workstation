@@ -6,10 +6,10 @@
   args:
     executable: /usr/bin/bash
 
-- name: "Latest version of packer:"
+- name: Latest version of packer
   ansible.builtin.debug:
     var: version.stdout
 
-- name: "Set fact with latest version of packer"
+- name: Set fact with latest version of packer
   ansible.builtin.set_fact:
     packer_version: "{{ version.stdout }}"

@@ -1,0 +1,20 @@
+---
+- name: Get installed version of fzf
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.shell: fzf --version | awk '{print $1}'
+  register: installed_fzf_version
+  changed_when: false
+  ignore_errors: true
+
+- name: Installed version of fzf
+  ansible.builtin.debug:
+    var: installed_fzf_version.stdout
+
+- name: Get latest version of fzf
+  ansible.builtin.include_tasks: get_latest_version.yml
+  when: fzf_version is not defined
+
+- name: Install fzf
+  ansible.builtin.include_tasks: install.yml
+  when: installed_fzf_version.stdout != fzf_version

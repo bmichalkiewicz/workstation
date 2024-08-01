@@ -1,0 +1,53 @@
+---
+username: michab
+wsl_root_path: /dusa
+
+# Path configuration for applications
+applications_install_path: /usr/local/bin
+
+# Krew (Kubectl plugin manager) plugins to install
+krew_plugin_list:
+  - sniff
+  - ctx
+  - ns
+
+helm_plugin_list:
+ - name: diff
+   url:  https://github.com/databus23/helm-diff
+
+# Debian package installation list
+debian_package_list:
+  - apt-transport-https
+  - pipx
+  - build-essential
+  - ca-certificates
+  - curl
+  - dkms
+  - git
+  - gnupg-agent
+  - haveged
+  - htop
+  - iotop
+  - iptraf-ng
+  - mc
+  - ncdu
+  - powerline
+  - python3-pip
+  - rsync
+  - screen
+  - software-properties-common
+  - systemd-timesyncd
+  - tar
+  - tmux
+  - vim
+  - unzip
+  - wget
+  - python3-debian
+
+# Python applications configuration
+python_apps_update_required: false
+python_apps_list:
+  - name: ansible
+  - name: ansible-lint
+  - name: yamllint
+  - name: kubernetes

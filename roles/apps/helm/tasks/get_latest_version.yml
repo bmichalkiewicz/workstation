@@ -6,10 +6,10 @@
   args:
     executable: /usr/bin/bash
 
-- name: "Latest version of helm:"
+- name: Latest version of helm
   ansible.builtin.debug:
     var: version.stdout
 
-- name: "Set fact with latest version of helm"
+- name: Set fact with latest version of helm
   ansible.builtin.set_fact:
     helm_version: "{{ version.stdout }}"

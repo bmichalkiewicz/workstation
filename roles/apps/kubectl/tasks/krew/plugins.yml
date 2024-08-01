@@ -1,7 +1,5 @@
 ---
 - name: Grab list of install kubectl krew plugins
-  become: true
-  become_user: "{{ username }}"
   ansible.builtin.shell: |
     set -o pipefail && ~/.krew/bin/kubectl-krew list | awk '{print $1}'
   register: krew_installed_plugins
@@ -10,10 +8,7 @@
     executable: /usr/bin/bash
 
 - name: Install plugins
-  become: true
-  become_user: "{{ username }}"
   ansible.builtin.shell: |
     ~/.krew/bin/kubectl-krew install {{ item }}
-  with_items:
-    - "{{ krew_plugins }}"
+  loop: "{{ krew_plugins }}"
   when: item not in krew_installed_plugins.stdout_lines

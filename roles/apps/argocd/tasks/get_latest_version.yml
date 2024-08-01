@@ -6,10 +6,10 @@
   args:
     executable: /usr/bin/bash
 
-- name: "Latest version of argocd:"
+- name: Latest version of argocd
   ansible.builtin.debug:
     var: version.stdout
 
-- name: "Set fact with latest version of argocd"
+- name: Set fact with latest version of argocd
   ansible.builtin.set_fact:
     argocd_version: "{{ version.stdout }}"

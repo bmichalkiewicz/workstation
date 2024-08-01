@@ -1,25 +1,15 @@
 ---
-# terraform_0.11.7_linux_amd64.zip
-- name: Install dependencies
-  ansible.builtin.package:
-    name: "{{ pkgs }}"
-    state: present
-  vars:
-    pkgs:
-      - unzip
-      - tar
-
 - name: Get installed version
   ansible.builtin.shell: terraform version | head -n 1 | grep v | cut -d'v' -f2
   register: installed_terraform_version
   changed_when: false
   ignore_errors: true
 
-- name: "Installed version of terraform:"
+- name: Installed version of terraform
   ansible.builtin.debug:
     var: installed_terraform_version.stdout
 
-- name: Tasks
+- name: Get latest version of terraform
   ansible.builtin.include_tasks: get_latest_version.yml
   when: terraform_version is not defined
 
@@ -30,20 +20,22 @@
   when: installed_terraform_version.stdout != terraform_version
 
 - name: Unarchive a file that is already on the remote machine
+  become: true
   ansible.builtin.unarchive:
     src: /tmp/terraform.zip
-    dest: /usr/local/bin/
+    dest: "{{ applications_install_path }}/"
     remote_src: true
   when: installed_terraform_version.stdout != terraform_version
 
 - name: Set permissions terraform
+  become: true
   ansible.builtin.file:
-    path: /usr/local/bin/terraform
-    mode: 0755
+    path: "{{ applications_install_path }}/terraform"
     owner: root
     group: root
+    mode: "0755"
 
-- name: Delete packer archive
+- name: Delete terraform archive
   ansible.builtin.file:
     state: absent
     path: /tmp/terraform.zip

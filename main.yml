@@ -1,0 +1,40 @@
+---
+- name: Install Basic Utilities and Applications # noqa role-name[path]
+  hosts: local
+  roles:
+    - name: Install Common Utilities and Configurations
+      role: common
+    - name: Install and Manage Python Packages with Pip
+      role: pip
+    - name: Install Bash Auto-completion Scripts
+      role: apps/bash_autocompletion
+    - name: Install Helm, The Kubernetes Package Manager
+      role: apps/helm
+    - name: Install Krew, The Kubectl Plugin Manager
+      role: apps/krew
+    - name: Install Kubectl, The Kubernetes CLI Tool
+      role: apps/kubectl
+    - name: Install Kubectx for Kubernetes Context and Namespace Switching
+      role: apps/kubectx
+    - name: Install Terraform, The Infrastructure as Code Software Tool
+      role: apps/terraform
+    - name: Install Packer, The Automated Machine Image Builder
+      role: apps/packer
+    - name: Install ctop - A Container Monitoring Tool
+      role: apps/ctop
+    - name: Install stern - A Log Tailer for Kubernetes
+      role: apps/stern
+    - name: Install kail - Kubernetes Log Viewer
+      role: apps/kail
+    - name: Install dive - A Tool for Exploring Docker Images
+      role: apps/dive
+    - name: Install terragrunt - A Thin Wrapper for Terraform
+      role: apps/terragrunt
+    - name: Install k9s - Kubernetes CLI To Manage Clusters
+      role: apps/k9s
+    - name: Install fzf - a Fuzzy Finder
+      role: apps/fzf
+    - name: Install Oh My Zsh - An Open Source, Community-driven Framework for Managing Zsh Configuration
+      role: apps/oh_my_zsh
+    - name: Install dusa - A Custom CLI Utility
+      role: apps/dusa

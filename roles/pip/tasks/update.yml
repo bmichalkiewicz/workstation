@@ -1,0 +1,9 @@
+---
+- name: Update python apps
+  community.general.pipx:
+    name: "{{ item.name }}"
+    state: latest  # noqa package-latest
+    install_deps: true
+  loop: "{{ python_apps_list }}"
+  tags:
+    - update

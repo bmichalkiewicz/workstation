@@ -1,7 +1,5 @@
 ---
 - name: Get installed version of ctop
-  become: true
-  become_user: "{{ username }}"
   ansible.builtin.shell: |
     set -o pipefail && ctop -v | cut -d' ' -f3 | cut -d',' -f1
   register: installed_ctop_version
@@ -10,14 +8,14 @@
   args:
     executable: /usr/bin/bash
 
-- name: "Installed version of ctop:"
+- name: Installed version of ctop
   ansible.builtin.debug:
     var: installed_ctop_version.stdout
 
-- name: Tasks
+- name: Get latest version of ctop
   ansible.builtin.include_tasks: get_latest_version.yml
   when: ctop_version is not defined
 
-- name: Tasks
+- name: Install ctop
   ansible.builtin.include_tasks: install.yml
   when: installed_ctop_version.stdout != ctop_version

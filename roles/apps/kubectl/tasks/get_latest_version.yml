@@ -6,10 +6,10 @@
   args:
     executable: /usr/bin/bash
 
-- name: "Latest version of kubectl:"
+- name: Latest version of kubectl
   ansible.builtin.debug:
     var: version.stdout
 
-- name: "Set fact with latest version of kubectl"
+- name: Set fact with latest version of kubectl
   ansible.builtin.set_fact:
     kubectl_version: "{{ version.stdout }}"

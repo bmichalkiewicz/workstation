@@ -1,0 +1,15 @@
+---
+- name: Get latest version fzf
+  ansible.builtin.shell: set -o pipefail && curl -Is https://github.com/junegunn/fzf/releases/latest | grep -i 'location:' | cut -f2 -d'v' | cut -f1 -d'"'
+  register: version
+  changed_when: false
+  args:
+    executable: /usr/bin/bash
+
+- name: Latest version of fzf
+  ansible.builtin.debug:
+    var: version.stdout
+
+- name: Set fact with latest version of fzf
+  ansible.builtin.set_fact:
+    fzf_version: "{{ version.stdout }}"

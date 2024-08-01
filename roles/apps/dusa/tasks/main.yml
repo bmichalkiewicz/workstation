@@ -1,0 +1,35 @@
+---
+- name: Install DUSA CLI  # noqa risky-file-permissions
+  become: true
+  ansible.builtin.copy:
+    src: dusa-3.1.0
+    dest: "{{ applications_install_path }}/dusa"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Create a directory .dusa if it does not exist
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.dusa"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0700"
+
+- name: Create a directory /dusa for repositories
+  become: true
+  ansible.builtin.file:
+    path: /dusa
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0700"
+
+- name: Copy config file # noqa risky-file-permissions
+  ansible.builtin.template:
+    src: config.yaml.j2
+    dest: "/home/{{ username }}/.dusa/config.yaml"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0755"
+    force: false

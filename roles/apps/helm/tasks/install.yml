@@ -16,13 +16,13 @@
     remote_src: true
 
 - name: Copy helm
+  become: true
   ansible.builtin.copy:
     src: "/tmp/helm/linux-amd64/helm"
-    dest: "/usr/local/bin/helm"
-    remote_src: true
-    mode: 0755
+    dest: "{{ applications_install_path }}/helm"
     owner: root
     group: root
+    mode: "0755"
 
 - name: Delete content & directory
   ansible.builtin.file:

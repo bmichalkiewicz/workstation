@@ -1,0 +1,31 @@
+---
+- name: Directory for fzf  # noqa risky-file-permissions
+  ansible.builtin.file:
+    path: /tmp/fzf
+    state: directory
+
+- name: Download fzf binary # noqa risky-file-permissions
+  ansible.builtin.get_url:
+    url: "https://github.com/junegunn/fzf/releases/download/v{{ fzf_version }}/fzf-{{ fzf_version }}-linux_amd64.tar.gz"
+    dest: /tmp/fzf/fzf.tar.gz
+
+- name: Unarchive a file that is already on the remote machine
+  ansible.builtin.unarchive:
+    src: /tmp/fzf/fzf.tar.gz
+    dest: /tmp/fzf
+    remote_src: true
+
+- name: Copy fzf
+  become: true
+  ansible.builtin.copy:
+    src: "/tmp/fzf/fzf"
+    dest: "{{ applications_install_path }}/fzf"
+    owner: root
+    group: root
+    mode: "0755"
+    remote_src: true
+
+- name: Delete content & directory
+  ansible.builtin.file:
+    state: absent
+    path: /tmp/fzf

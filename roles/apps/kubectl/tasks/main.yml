@@ -7,27 +7,26 @@
   args:
     executable: /usr/bin/bash
 
-- name: "Installed version of kubectl:"
+- name: Installed version of kubectl
   ansible.builtin.debug:
     var: installed_kubectl_version.stdout
 
-- name: Tasks
+- name: Get latest version of kubectl
   ansible.builtin.include_tasks: get_latest_version.yml
   when: kubectl_version is not defined
 
 - name: Download kubectl  # noqa risky-file-permissions
+  become: true
   ansible.builtin.get_url:
     url: "https://storage.googleapis.com/kubernetes-release/release/v{{ kubectl_version }}/bin/linux/amd64/kubectl"
-    dest: /usr/local/bin/kubectl
+    dest: "{{ applications_install_path }}/kubectl"
     force: true
   when: installed_kubectl_version.stdout != kubectl_version
 
 - name: Set permissions kubectl
+  become: true
   ansible.builtin.file:
-    path: /usr/local/bin/kubectl
-    mode: 0755
+    path: "{{ applications_install_path }}/kubectl"
     owner: root
     group: root
-
-- name: Tasks
-  ansible.builtin.import_tasks: krew.yml
+    mode: "0755"

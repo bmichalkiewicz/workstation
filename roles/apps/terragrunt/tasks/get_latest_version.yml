@@ -7,10 +7,10 @@
   args:
     executable: /usr/bin/bash
 
-- name: "Latest version of terragrunt:"
+- name: Latest version of terragrunt
   ansible.builtin.debug:
     var: version.stdout
 
-- name: "Set fact with latest version of terragrunt"
+- name: Set fact with latest version of terragrunt
   ansible.builtin.set_fact:
     terragrunt_version: "{{ version.stdout }}"

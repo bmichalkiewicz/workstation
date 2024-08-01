@@ -7,14 +7,14 @@
   changed_when: false
   ignore_errors: true
 
-- name: "Installed version of dive:"
+- name: Installed version of dive
   ansible.builtin.debug:
     var: installed_dive_version.stdout
 
-- name: Tasks
+- name: Get latest version of dive
   ansible.builtin.include_tasks: get_latest_version.yml
   when: dive_version is not defined
 
-- name: Tasks
+- name: Install dive
   ansible.builtin.include_tasks: install.yml
   when: installed_dive_version.stdout != dive_version

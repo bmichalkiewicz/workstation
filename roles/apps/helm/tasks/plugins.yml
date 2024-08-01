@@ -1,6 +1,42 @@
 ---
-# helm plugin list
-# NAME	VERSION	DESCRIPTION
-# edit	0.2.0  	Edit a release.
-#
-# helm plugin install https://github.com/mstrzele/helm-edit
+- name: Grab list of installed helm plugins
+  ansible.builtin.shell: |
+    set -o pipefail && helm plugin list | awk 'NR > 1 {print $1}'
+  register: helm_installed_plugins
+  changed_when: false
+  args:
+    executable: /usr/bin/bash
+
+- name: Install plugins
+  ansible.builtin.shell: |
+    helm plugin install {{ item.url }}
+  loop: "{{ helm_plugin_list }}"
+  when: item.name not in helm_installed_plugins.stdout_lines
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Check if Helm plugin is up-to-date and build a list
+  ansible.builtin.shell: |
+    CURRENT_VERSION=$(helm plugin list | grep '{{ item.name }}' | awk '{print $2}')
+    LATEST_VERSION=$(curl -Is {{ item.url }}/releases/latest | grep -i 'location:' | sed 's/.*\/v\([^\/]*\).*/\1/' | tr -d '\r')
+    if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
+      echo "{{ item.name }}"
+    fi
+  loop: "{{ helm_plugin_list }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: plugins_to_update
+  ignore_errors: true
+  changed_when: false
+
+- name: Set fact for plugins to update
+  set_fact:
+    plugins_to_update_list: "{{ plugins_to_update.results | map(attribute='stdout') | select('ne', '') | list }}"
+
+- name: Update plugins that are not up-to-date
+  ansible.builtin.shell: |
+    helm plugin update {{ item }}
+  loop: "{{ plugins_to_update_list }}"
+  when: plugins_to_update_list | length > 0
+  loop_control:
+    label: "{{ item }}"

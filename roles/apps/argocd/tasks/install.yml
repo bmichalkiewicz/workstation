@@ -1,8 +1,9 @@
 ---
 - name: Download argocd binary
+  become: true
   ansible.builtin.get_url:
     url: "https://github.com/argoproj/argo-cd/releases/download/v{{ argocd_version }}/argocd-linux-amd64"
-    dest: "/usr/local/bin/argocd"
-    mode: 0755
+    dest: "{{ applications_install_path }}/argocd"
+    mode: "0755"
     owner: root
     group: root

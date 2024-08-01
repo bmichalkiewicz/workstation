@@ -5,14 +5,17 @@
   changed_when: false
   ignore_errors: true
 
-- name: "Installed version of helm:"
+- name: Installed version of helm
   ansible.builtin.debug:
     var: installed_helm_version.stdout
 
-- name: Tasks
+- name: Get latest version of helm
   ansible.builtin.include_tasks: get_latest_version.yml
   when: helm_version is not defined
 
-- name: Tasks
+- name: Install helm
   ansible.builtin.include_tasks: install.yml
   when: installed_helm_version.stdout != helm_version
+
+- name: Install helm plugins
+  ansible.builtin.import_tasks: plugins.yml

@@ -1,0 +1,4 @@
+---
+virtualenv_install_path: '/opt/virtualenv'
+
+python_apps_update_required: true

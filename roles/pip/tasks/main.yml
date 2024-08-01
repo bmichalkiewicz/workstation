@@ -1,0 +1,12 @@
+---
+- name: Install python apps globally
+  community.general.pipx:
+    name: "{{ item.name }}"
+    install_deps: true
+  loop: "{{ python_apps_list }}"
+
+- name: Import update task
+  ansible.builtin.import_tasks: update.yml
+  tags:
+    - update
+  when: python_apps_update_required

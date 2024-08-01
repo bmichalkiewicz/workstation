@@ -1,0 +1,7 @@
+---
+- name: Install core packages
+  become: true
+  ansible.builtin.apt:
+    pkg: "{{ debian_package_list }}"
+    state: latest # noqa package-latest
+    update_cache: true

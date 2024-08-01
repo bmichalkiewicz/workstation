@@ -1,0 +1,36 @@
+---
+- name: Upgrade krew
+  ansible.builtin.include_tasks: update.yml
+  when: krew_version is not defined
+
+- name: Get installed version
+  ansible.builtin.shell: kubectl krew version | grep GitTag | awk '{print $2}' | cut -d'v' -f2
+  register: installed_krew_version
+  changed_when: false
+  ignore_errors: true
+  args:
+    executable: /usr/bin/bash
+
+- name: Installed version of krew
+  ansible.builtin.debug:
+    var: installed_krew_version.stdout
+
+- name: Get latest version of krew
+  ansible.builtin.include_tasks: get_latest_version.yml
+  when: krew_version is not defined
+
+- name: Install krew
+  ansible.builtin.include_tasks: install.yml
+  when: installed_krew_version.stdout != krew_version
+
+- name: Install krew plugins
+  ansible.builtin.import_tasks: plugins.yml
+
+- name: Add krew variables to /etc/bash.bashrc
+  become: true
+  ansible.builtin.blockinfile:
+    path: /etc/bash.bashrc
+    marker: "### {mark} KREW MANAGED BLOCK ###"
+    block: |
+
+      export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"

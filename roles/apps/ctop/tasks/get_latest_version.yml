@@ -7,10 +7,10 @@
   args:
     executable: /usr/bin/bash
 
-- name: "Latest version of ctop:"
+- name: Latest version of ctop
   ansible.builtin.debug:
     var: version.stdout
 
-- name: "Set fact with latest version of ctop"
+- name: Set fact with latest version of ctop
   ansible.builtin.set_fact:
     ctop_version: "{{ version.stdout }}"

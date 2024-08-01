@@ -6,10 +6,10 @@
   args:
     executable: /usr/bin/bash
 
-- name: "Latest version of stern:"
+- name: Latest version of stern
   ansible.builtin.debug:
     var: version.stdout
 
-- name: "Set fact with latest version of stern"
+- name: Set fact with latest version of stern
   ansible.builtin.set_fact:
     stern_version: "{{ version.stdout }}"

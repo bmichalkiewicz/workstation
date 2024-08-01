@@ -1,20 +1,11 @@
 ---
-- name: Install dependencies
-  ansible.builtin.package:
-    name: "{{ pkgs }}"
-    state: present
-  vars:
-    pkgs:
-      - unzip
-      - tar
-
 - name: Get installed version
   ansible.builtin.shell: packer version | head -n 1 | grep v | cut -d'v' -f2
   register: installed_packer_version
   changed_when: false
   ignore_errors: true
 
-- name: "Installed version of packer:"
+- name: Installed version of packer
   ansible.builtin.debug:
     var: installed_packer_version.stdout
 
@@ -29,18 +20,20 @@
   when: installed_packer_version.stdout != packer_version
 
 - name: Unarchive a file that is already on the remote machine
+  become: true
   ansible.builtin.unarchive:
     src: /tmp/packer.zip
-    dest: /usr/local/bin/
+    dest: "{{ applications_install_path }}/"
     remote_src: true
   when: installed_packer_version.stdout != packer_version
 
 - name: Set permissions packer
+  become: true
   ansible.builtin.file:
-    path: /usr/local/bin/packer
-    mode: 0755
-    owner: root
-    group: root
+    path: "{{ applications_install_path }}/packer"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0755"
 
 - name: Delete packer archive
   ansible.builtin.file:

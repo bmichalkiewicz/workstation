@@ -7,14 +7,14 @@
   changed_when: false
   ignore_errors: true
 
-- name: "Installed version of stern:"
+- name: Installed version of stern
   ansible.builtin.debug:
     var: installed_stern_version.stdout
 
-- name: Tasks
+- name: Get latest version of stern
   ansible.builtin.include_tasks: get_latest_version.yml
   when: stern_version is not defined
 
-- name: Tasks
+- name: Install stern
   ansible.builtin.include_tasks: install.yml
   when: installed_stern_version.stdout != stern_version

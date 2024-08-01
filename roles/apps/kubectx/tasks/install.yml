@@ -1,0 +1,52 @@
+---
+- name: Directory for kubectx and kubens  # noqa risky-file-permissions
+  ansible.builtin.file:
+    path: /tmp/kubectx
+    state: directory
+
+- name: Download kubectx  # noqa risky-file-permissions
+  ansible.builtin.get_url:
+    url: "https://github.com/ahmetb/kubectx/releases/download/v{{ kubectx_version }}/kubectx_v{{ kubectx_version }}_linux_x86_64.tar.gz"
+    dest: /tmp/kubectx/kubectx.tar.gz
+
+- name: Download kubens  # noqa risky-file-permissions
+  ansible.builtin.get_url:
+    url: "https://github.com/ahmetb/kubectx/releases/download/v{{ kubectx_version }}/kubens_v{{ kubectx_version }}_linux_x86_64.tar.gz"
+    dest: /tmp/kubectx/kubens.tar.gz
+
+- name: Unarchive a file that is already on the remote machine
+  ansible.builtin.unarchive:
+    src: /tmp/kubectx/kubectx.tar.gz
+    dest: /tmp/kubectx
+    remote_src: true
+
+- name: Unarchive a file that is already on the remote machine
+  ansible.builtin.unarchive:
+    src: /tmp/kubectx/kubens.tar.gz
+    dest: /tmp/kubectx
+    remote_src: true
+
+- name: Copy kubectx
+  become: true
+  ansible.builtin.copy:
+    src: "/tmp/kubectx/kubectx"
+    dest: "{{ applications_install_path }}/kubectx"
+    owner: root
+    group: root
+    mode: "0755"
+    remote_src: true
+
+- name: Copy kubens
+  become: true
+  ansible.builtin.copy:
+    src: "/tmp/kubectx/kubens"
+    dest: "{{ applications_install_path }}/kubens"
+    owner: root
+    group: root
+    mode: "0755"
+    remote_src: true
+
+- name: Delete content & directory
+  ansible.builtin.file:
+    state: absent
+    path: /tmp/kubectx

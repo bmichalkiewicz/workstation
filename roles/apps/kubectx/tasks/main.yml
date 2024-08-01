@@ -1,0 +1,20 @@
+---
+- name: Get installed version
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.shell: kubectx --version
+  register: installed_kubectx_version
+  changed_when: false
+  ignore_errors: true
+
+- name: Installed version of kubectx and kubens
+  ansible.builtin.debug:
+    var: installed_kubectx_version.stdout
+
+- name: Get latest version of kubectx and kubens
+  ansible.builtin.include_tasks: get_latest_version.yml
+  when: kubectx_version is not defined
+
+- name: Install kubectx and kubens
+  ansible.builtin.include_tasks: install.yml
+  when: installed_kubectx_version.stdout != kubectx_version

@@ -5,19 +5,20 @@
   changed_when: false
   ignore_errors: true
 
-- name: "Installed version of terragrunt:"
+- name: Installed version of terragrunt
   ansible.builtin.debug:
     var: installed_terragrunt_version.stdout
 
-- name: Tasks
+- name: Get latest version of terragrunt
   ansible.builtin.include_tasks: get_latest_version.yml
   when: terragrunt_version is not defined
 
 - name: Download terragrunt
+  become: true
   ansible.builtin.get_url:
     url: "https://github.com/gruntwork-io/terragrunt/releases/download/v{{ terragrunt_version }}/terragrunt_linux_amd64"
-    dest: /usr/local/bin/terragrunt
-    mode: 0755
+    dest: "{{ applications_install_path }}/terragrunt"
     owner: root
     group: root
+    mode: "0755"
   when: installed_terragrunt_version.stdout != terragrunt_version
